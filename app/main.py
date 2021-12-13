@@ -3,7 +3,7 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 
-from app.api import home
+from app.api import home, summaries
 from app.db import init_db
 
 log = logging.getLogger("uvicorn")
@@ -12,8 +12,8 @@ log = logging.getLogger("uvicorn")
 def create_application() -> FastAPI:
     app = FastAPI()
     app.include_router(home.router)
+    app.include_router(summaries.router, prefix="/summaries", tags=["summaries"])
     return app
-
 
 app = create_application()
 
