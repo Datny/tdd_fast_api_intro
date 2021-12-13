@@ -1,29 +1,32 @@
-import os
+import logging
 
 import uvicorn
 from fastapi import FastAPI
-from tortoise.contrib.fastapi import register_tortoise
 
 from app.api import home
+from app.db import init_db
+
+log = logging.getLogger("uvicorn")
 
 
 def create_application() -> FastAPI:
     app = FastAPI()
-
-    register_tortoise(
-        app,
-        db_url=os.environ.get("DATABASE_URL"),
-        modules={"models": ["models.tortoise"]},
-        generate_schemas=False,
-        add_exception_handlers=True,
-    )
-
     app.include_router(home.router)
     return app
 
 
 app = create_application()
 
+
+@app.on_event("startup")
+async def startup_event():
+    log.info("Starting up ...")
+    init_db(app)
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    log.info("Shuting down ...")
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True)
