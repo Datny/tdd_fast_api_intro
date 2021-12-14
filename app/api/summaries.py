@@ -1,11 +1,10 @@
-from typing import List, Union
+from typing import List
 
 from fastapi import APIRouter, HTTPException
 
 from app.api import crud
 from app.models.pydantic import SummaryPayloadSchema, SummaryResponseSchema
 from app.models.tortoise import SummarySchema
-
 
 router = APIRouter()
 
@@ -14,7 +13,7 @@ router = APIRouter()
 async def create_summary(payload: SummaryPayloadSchema) -> SummaryResponseSchema:
     summary_id = await crud.post(payload)
 
-    response = {'id': summary_id, 'url': payload.url}
+    response = {"id": summary_id, "url": payload.url}
     return response
 
 

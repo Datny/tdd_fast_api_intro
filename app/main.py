@@ -15,6 +15,7 @@ def create_application() -> FastAPI:
     app.include_router(summaries.router, prefix="/summaries", tags=["summaries"])
     return app
 
+
 app = create_application()
 
 
@@ -27,6 +28,7 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     log.info("Shuting down ...")
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", reload=True)
